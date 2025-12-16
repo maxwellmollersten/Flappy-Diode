@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Flappy Diode</title>
+  <meta name="description" content="Fysiskt elektronikspel inspirerat av Flappy Bird." />
+  <style>
+    :root{
+      --bg:#070a12;
+      --panel:#0c1222;
+      --panel2:#0f1934;
+      --text:#eaf0ff;
+      --muted:#b7c1df;
+      --line:rgba(255,255,255,.12);
+      --shadow: 0 14px 40px rgba(0,0,0,.45);
+      --radius:18px;
+      --max: 980px;
+      --a:#7aa2ff;
+      --b:#6ef3c5;
+      --c:#ffb86b;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      color:var(--text);
+      background:
+        radial-gradient(900px 500px at 10% 0%, rgba(122,162,255,.20), transparent 60%),
+        radial-gradient(900px 600px at 90% 5%, rgba(110,243,197,.16), transparent 60%),
+        linear-gradient(180deg, #050714 0%, var(--bg) 55%, #05060d 100%);
+    }
+    a{color:inherit}
+    .wrap{max-width:var(--max); margin:0 auto; padding:26px 18px 60px}
+    header{
+      position:sticky; top:0; z-index:20;
+      backdrop-filter: blur(12px);
+      background: rgba(5,7,20,.55);
+      border-bottom:1px solid var(--line);
+    }
+    .topbar{
+      max-width:var(--max);
+      margin:0 auto;
+      padding:12px 18px;
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px;
+      text-decoration:none;
+      font-weight:800;
+    }
+    .logo{
+      width:14px; height:14px; border-radius:999px;
+      background: linear-gradient(135deg, var(--a), var(--b));
+      box-shadow: 0 0 0 6px rgba(122,162,255,.10);
+    }
+    nav{display:flex; gap:10px; flex-wrap:wrap}
+    .pill{
+      text-decoration:none;
+      color:var(--muted);
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid transparent;
+    }
+    .pill:hover{color:var(--text); border-color:var(--line); background:rgba(255,255,255,.04)}
+    .card{
+      border-radius: var(--radius);
+      border:1px solid var(--line);
+      background: rgba(12,18,34,.72);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .pad{padding:22px}
+    h1{margin:0 0 10px; font-size: clamp(28px, 3.8vw, 44px); line-height:1.12}
+    h2{margin:0 0 10px; font-size:22px}
+    p{margin:0 0 12px; color:var(--muted); line-height:1.65}
+    ul{margin:0; padding-left:18px; color:var(--muted); line-height:1.7}
+    .chips{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px}
+    .chip{
+      font-size:12px;
+      padding:7px 10px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      color: rgba(234,240,255,.92);
+    }
+    .cta{display:flex; gap:10px; flex-wrap:wrap; margin-top:14px}
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center;
+      gap:8px;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      text-decoration:none;
+      font-weight:800;
+    }
+    .btn.primary{
+      border-color: rgba(122,162,255,.35);
+      background: linear-gradient(135deg, rgba(122,162,255,.20), rgba(110,243,197,.12));
+    }
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:14px;
+    }
+    @media (max-width: 860px){ .grid{grid-template-columns:1fr} }
+
+    /* Video */
+    .videoGrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+      margin-top:12px;
+    }
+    @media (max-width: 860px){ .videoGrid{grid-template-columns:1fr} }
+    .videoCard{
+      border-radius:16px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      overflow:hidden;
+    }
+    .videoCard .meta{padding:12px 14px}
+    .videoCard b{display:block; margin-bottom:4px}
+    .videoCard small{color:var(--muted); line-height:1.5}
+    .videoWrap{
+      position:relative;
+      width:100%;
+      aspect-ratio: 16/9;
+      background: rgba(0,0,0,.35);
+    }
+    .videoWrap iframe,
+    .videoWrap video{
+      position:absolute; inset:0;
+      width:100%; height:100%;
+      border:0;
+    }
+
+    footer{
+      margin-top:18px;
+      padding-top:18px;
+      border-top:1px solid var(--line);
+      color:var(--muted);
+      font-size:13px;
+      display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;
+    }
+    code{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 0.95em;
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      padding: 2px 6px;
+      border-radius: 8px;
+      color: rgba(234,240,255,.92);
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="topbar">
+      <a class="brand" href="#top">
+        <span class="logo" aria-hidden="true"></span>
+        <span>Flappy Diode</span>
+      </a>
+      <nav aria-label="Navigering">
+        <a class="pill" href="#overview">Översikt</a>
+        <a class="pill" href="#media">Video</a>
+        <a class="pill" href="#build">Bygg</a>
+        <a class="pill" href="#code">Kod</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top" class="wrap">
+    <section class="card pad" id="overview">
+      <h1>Flappy Diode</h1>
+      <p>Ett fysiskt elektronikspel inspirerat av <i>Flappy Bird</i>. Projektet kombinerar motorstyrning, sensorer och LED-drivning för ett interaktivt spel med poängräkning och “game over”-logik.</p>
+
+      <div class="chips">
+        <span class="chip">Arduino</span>
+        <span class="chip">DRV8833</span>
+        <span class="chip">PCA9685</span>
+        <span class="chip">LED</span>
+        <span class="chip">Sensorer</span>
+      </div>
+
+      <div class="cta">
+        <a class="btn primary" href="https://github.com/maxwellmollerstten/Flappy-Diode" target="_blank" rel="noreferrer">Repo</a>
+        <a class="btn" href="#media">Se video</a>
+      </div>
+    </section>
+
+    <section class="card pad" id="media" style="margin-top:14px">
+      <h2>Video</h2>
+      <p>Du kan lägga in video på två sätt: (A) YouTube/Google Drive embed eller (B) en <code>.mp4</code> i repo (funkar om filen inte är för stor).</p>
+
+      <div class="videoGrid" id="videoGrid"></div>
+
+      <div style="margin-top:12px">
+        <p class="muted">
+          Tips: Om du vill lägga video i repo: skapa mappen <code>media/</code> och lägg t.ex. <code>demo.mp4</code> där.
+        </p>
+      </div>
+    </section>
+
+    <section class="card pad" id="build" style="margin-top:14px">
+      <h2>Hårdvara</h2>
+      <ul>
+        <li>Arduino (Uno / Uno R4)</li>
+        <li>DRV8833 motor driver (H-brygga)</li>
+        <li>PCA9685 PWM-driver (I²C, flera adresser)</li>
+        <li>Joystick</li>
+        <li>Sensorer för positions- och kollisionsdetektion</li>
+      </ul>
+    </section>
+
+    <section class="card pad" id="code" style="margin-top:14px">
+      <h2>Kod & dokumentation</h2>
+      <p>All kod och dokumentation finns i detta repo. Struktur:</p>
+      <ul>
+        <li><code>index.html</code> – den här sidan</li>
+        <li><code>media/</code> – (valfritt) bilder och videor</li>
+        <li><code>src/</code> – (valfritt) Arduino-kod / dokument</li>
+      </ul>
+    </section>
+
+    <footer>
+      <div>© <span id="year"></span> Flappy Diode</div>
+      <div>GitHub Pages · <code>index.html</code></div>
+    </footer>
+  </main>
+
+  <script>
+    // ==========================
+    // LÄGG TILL VIDEOS HÄR
+    // type: "youtube" eller "mp4"
+    // ==========================
+    const videos = [
+      // --- EXEMPEL: YouTube (rekommenderat) ---
+      // Byt ut YOUTUBE_ID mot ditt video-id
+      // { type: "youtube", title: "Demo", note: "Kort demo av spelet.", id: "YOUTUBE_ID" },
+
+      // --- EXEMPEL: Lokal mp4 i repo ---
+      // Lägg filen i: media/demo.mp4
+      // { type: "mp4", title: "Demo (mp4)", note: "Video direkt från repo.", src: "media/demo.mp4" },
+    ];
+
+    const grid = document.getElementById("videoGrid");
+
+    function esc(s){
+      return (s || "").replace(/[&<>"']/g, m => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;" }[m]));
+    }
+
+    function render(){
+      if(!videos.length){
+        grid.innerHTML = `
+          <div class="videoCard">
+            <div class="meta">
+              <b>Inga videos inlagda än</b>
+              <small>Lägg till en video i listan <code>videos</code> i slutet av filen. Exempel finns i koden.</small>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = videos.map(v => {
+        const title = esc(v.title || "Video");
+        const note  = esc(v.note || "");
+        let media = "";
+
+        if(v.type === "youtube"){
+          // Privacy-friendlier domain: youtube-nocookie
+          const id = esc(v.id || "");
+          media = `
+            <div class="videoWrap">
+              <iframe
+                src="https://www.youtube-nocookie.com/embed/${id}"
+                title="${title}"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen>
+              </iframe>
+            </div>
+          `;
+        } else if(v.type === "mp4"){
+          const src = esc(v.src || "");
+          media = `
+            <div class="videoWrap">
+              <video controls preload="metadata">
+                <source src="${src}" type="video/mp4">
+                Din webbläsare stödjer inte video-taggen.
+              </video>
+            </div>
+          `;
+        } else {
+          media = `<div class="videoWrap"></div>`;
+        }
+
+        return `
+          <article class="videoCard">
+            ${media}
+            <div class="meta">
+              <b>${title}</b>
+              <small>${note}</small>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    document.getElementById("year").textContent = new Date().getFullYear();
+    render();
+  </script>
+</body>
+</html>
