@@ -9,7 +9,6 @@
     :root{
       --bg:#070a12;
       --panel:#0c1222;
-      --panel2:#0f1934;
       --text:#eaf0ff;
       --muted:#b7c1df;
       --line:rgba(255,255,255,.12);
@@ -18,7 +17,6 @@
       --max: 980px;
       --a:#7aa2ff;
       --b:#6ef3c5;
-      --c:#ffb86b;
     }
     *{box-sizing:border-box}
     body{
@@ -136,6 +134,57 @@
       border:0;
     }
 
+    /* Gallery */
+    .gallery{
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+      gap:14px;
+      margin-top:14px;
+    }
+    .gallery img{
+      width:100%;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.15);
+      background:#000;
+      cursor: zoom-in;
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+    .gallery img:hover{
+      transform: scale(1.02);
+      box-shadow: 0 12px 30px rgba(0,0,0,.45);
+    }
+
+    /* Lightbox */
+    .lightbox{
+      position:fixed; inset:0;
+      background: rgba(0,0,0,.86);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:9999;
+      padding: 22px;
+    }
+    .lightbox.open{display:flex}
+    .lightbox img{
+      max-width: 94vw;
+      max-height: 92vh;
+      border-radius: 16px;
+      border:1px solid rgba(255,255,255,.18);
+      box-shadow: 0 20px 70px rgba(0,0,0,.55);
+      cursor: zoom-out;
+    }
+    .lightbox .hint{
+      position:fixed;
+      top:14px; right:14px;
+      color: rgba(234,240,255,.80);
+      font-size: 12px;
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.06);
+      padding:8px 10px;
+      border-radius: 999px;
+      backdrop-filter: blur(10px);
+    }
+
     footer{
       margin-top:18px;
       padding-top:18px;
@@ -166,7 +215,8 @@
       <nav aria-label="Navigering">
         <a class="pill" href="#overview">Översikt</a>
         <a class="pill" href="#media">Video</a>
-        <a class="pill" href="#build">Bygg</a>
+        <a class="pill" href="#gallery">Galleri</a>
+        <a class="pill" href="#build">Hårdvara</a>
         <a class="pill" href="#code">Kod</a>
       </nav>
     </div>
@@ -175,7 +225,7 @@
   <main id="top" class="wrap">
     <section class="card pad" id="overview">
       <h1>Flappy Diode</h1>
-      <p>Ett fysiskt elektronikspel inspirerat av <i>Flappy Bird</i>. Projektet kombinerar motorstyrning, sensorer och LED-drivning för ett interaktivt spel med poängräkning och “game over”-logik. Alla olika kretsar styrs av en Arduino Uno R4.</p>
+      <p>Ett fysiskt elektronikspel inspirerat av <i>Flappy Bird</i>. Projektet kombinerar motorstyrning, sensorer och LED-drivning för ett interaktivt spel med poängräkning och “game over”-logik.</p>
 
       <div class="chips">
         <span class="chip">Arduino</span>
@@ -187,20 +237,32 @@
 
       <div class="cta">
         <a class="btn primary" href="https://github.com/maxwellmollerstten/Flappy-Diode" target="_blank" rel="noreferrer">Repo</a>
-        <a class="btn" href="#media">Se video</a>
+        <a class="btn" href="#gallery">Se galleri</a>
       </div>
     </section>
 
     <section class="card pad" id="media" style="margin-top:14px">
-      <h2>Video som visar när jag spelar spelet</h2>
-      <p></p>
-
+      <h2>Video</h2>
+      <p>Tips: om YouTube-embed krånglar p.g.a. restriktioner i din webbläsare, testa annan browser eller lägg en mp4 i <code>media/</code>.</p>
       <div class="videoGrid" id="videoGrid"></div>
+    </section>
 
-      <div style="margin-top:12px">
-        <p class="muted">
-          Denna demo visar när jag spelar och kontrollerar LEDS med en analog joystick. Bakgrunden av spelet är tyg som vi har målat på. Tyget är fastlimmat till ett kuggrem som tre motorer snurrar på för att få det att se ut som att fågeln rör sig. Poäng räknaren adderar ett poäng varje gång fågeln tar sig genom ett hinder. Sensorerna som ligger bakom det svartmålade tyget känner av hinder.
-        </p>
+    <section class="card pad" id="gallery" style="margin-top:14px">
+      <h2>Galleri</h2>
+      <p>Klicka på en bild för att se den större.</p>
+
+      <!--
+        Lägg dina bilder i repo-mappen: media/
+        Exempel:
+          media/leds.jpg
+          media/board.jpg
+          media/setup.jpg
+        Byt filnamnen nedan så de matchar exakt.
+      -->
+      <div class="gallery">
+        <img src="media/leds.jpg"  alt="LED-matris" data-full="media/leds.jpg">
+        <img src="media/board.jpg" alt="Kretskort"  data-full="media/board.jpg">
+        <img src="media/setup.jpg" alt="Uppkoppling" data-full="media/setup.jpg">
       </div>
     </section>
 
@@ -212,8 +274,6 @@
         <li>PCA9685 PWM-driver (I²C, flera adresser)</li>
         <li>Joystick</li>
         <li>Sensorer för positions- och kollisionsdetektion</li>
-        <li>7-segments LED display för poängräkning</li>
-
       </ul>
     </section>
 
@@ -222,8 +282,8 @@
       <p>All kod och dokumentation finns i detta repo. Struktur:</p>
       <ul>
         <li><code>index.html</code> – den här sidan</li>
-        <li><code>media/</code> Bilder på de olika kretsar </li>
-        <li><code>src/</code> Arduino IDE kod</li>
+        <li><code>media/</code> – bilder + ev. mp4</li>
+        <li><code>src/</code> – Arduino IDE kod</li>
       </ul>
     </section>
 
@@ -233,59 +293,56 @@
     </footer>
   </main>
 
+  <!-- Lightbox overlay -->
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <div class="hint">Klicka eller tryck ESC för att stänga</div>
+    <img id="lightboxImg" alt="">
+  </div>
+
   <script>
     // ==========================
-    // LÄGG TILL VIDEOS HÄR
+    // VIDEO: lägg till videos här
     // type: "youtube" eller "mp4"
     // ==========================
     const videos = [
+      // YouTube-exempel (lägg bara in ID:t)
+      { type: "youtube", title: "Flappy Diode – Demo", note: "Kort demo av spelet.", id: "Ypkc8XQxtg" },
 
-      {
-        type: "youtube",
-        title: "Flappy Diode – Demo",
-        note: "Kort demo av spelet.",
-        id: "YRpkC8XQxtg"
-      }
-      // --- EXEMPEL: YouTube (rekommenderat) ---
-      // Byt ut YOUTUBE_ID mot ditt video-id
-      // { type: "youtube", title: "Demo", note: "Kort demo av spelet.", id: "YOUTUBE_ID" },
-
-      // --- EXEMPEL: Lokal mp4 i repo ---
-      // Lägg filen i: media/demo.mp4
+      // mp4-exempel (om du lägger en mp4 i media/)
       // { type: "mp4", title: "Demo (mp4)", note: "Video direkt från repo.", src: "media/demo.mp4" },
     ];
 
-    const grid = document.getElementById("videoGrid");
+    const videoGrid = document.getElementById("videoGrid");
 
     function esc(s){
       return (s || "").replace(/[&<>"']/g, m => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;" }[m]));
     }
 
-    function render(){
+    function renderVideos(){
       if(!videos.length){
-        grid.innerHTML = `
+        videoGrid.innerHTML = `
           <div class="videoCard">
             <div class="meta">
               <b>Inga videos inlagda än</b>
-              <small>Lägg till en video i listan <code>videos</code> i slutet av filen. Exempel finns i koden.</small>
+              <small>Lägg till ett objekt i listan <code>videos</code> i koden.</small>
             </div>
           </div>
         `;
         return;
       }
 
-      grid.innerHTML = videos.map(v => {
+      videoGrid.innerHTML = videos.map(v => {
         const title = esc(v.title || "Video");
         const note  = esc(v.note || "");
         let media = "";
 
         if(v.type === "youtube"){
-          // Privacy-friendlier domain: youtube-nocookie
           const id = esc(v.id || "");
+          // OBS: om du får "Playback error", testa att byta till youtube-nocookie eller tvärtom
           media = `
             <div class="videoWrap">
               <iframe
-                src="https://www.youtube-nocookie.com/embed/${id}"
+                src="https://www.youtube.com/embed/${id}"
                 title="${title}"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowfullscreen>
@@ -302,8 +359,6 @@
               </video>
             </div>
           `;
-        } else {
-          media = `<div class="videoWrap"></div>`;
         }
 
         return `
@@ -318,8 +373,41 @@
       }).join("");
     }
 
+    // ==========================
+    // GALLERY: click -> lightbox
+    // ==========================
+    const lightbox = document.getElementById("lightbox");
+    const lightboxImg = document.getElementById("lightboxImg");
+
+    function openLightbox(src, alt){
+      lightboxImg.src = src;
+      lightboxImg.alt = alt || "";
+      lightbox.classList.add("open");
+      lightbox.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeLightbox(){
+      lightbox.classList.remove("open");
+      lightbox.setAttribute("aria-hidden", "true");
+      lightboxImg.src = "";
+      document.body.style.overflow = "";
+    }
+
+    document.querySelectorAll(".gallery img").forEach(img => {
+      img.addEventListener("click", () => {
+        const full = img.getAttribute("data-full") || img.src;
+        openLightbox(full, img.alt);
+      });
+    });
+
+    lightbox.addEventListener("click", closeLightbox);
+    document.addEventListener("keydown", (e) => {
+      if(e.key === "Escape") closeLightbox();
+    });
+
     document.getElementById("year").textContent = new Date().getFullYear();
-    render();
+    renderVideos();
   </script>
 </body>
 </html>
