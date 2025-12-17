@@ -98,12 +98,31 @@
       border-color: rgba(122,162,255,.35);
       background: linear-gradient(135deg, rgba(122,162,255,.20), rgba(110,243,197,.12));
     }
+
     .grid{
       display:grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1.15fr .85fr;
       gap:14px;
+      align-items:start;
     }
     @media (max-width: 860px){ .grid{grid-template-columns:1fr} }
+
+    /* Inner "kort" i kortet */
+    .subcard{
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.04);
+      box-shadow: 0 10px 24px rgba(0,0,0,.28);
+      padding:14px;
+    }
+    .subcard h3{
+      margin:0 0 8px;
+      font-size:14px;
+      letter-spacing:.2px;
+      color: rgba(234,240,255,.92);
+    }
+    .subcard p{margin:0 0 10px}
+    .subcard p:last-child{margin:0}
 
     /* Video */
     .videoGrid{
@@ -153,6 +172,13 @@
     .gallery img:hover{
       transform: scale(1.02);
       box-shadow: 0 12px 30px rgba(0,0,0,.45);
+    }
+    figure{margin:0}
+    figcaption{
+      margin-top:8px;
+      color:var(--muted);
+      line-height:1.55;
+      font-size:13px;
     }
 
     /* Lightbox */
@@ -252,43 +278,51 @@
       <h2>Galleri</h2>
       <p>Klicka på en bild för att se den större.</p>
 
-      <!--
-        Lägg dina bilder i repo-mappen: media/
-        Exempel:
-          media/leds.jpg
-          media/board.jpg
-          media/setup.jpg
-        Byt filnamnen nedan så de matchar exakt.
-      -->
       <div class="gallery">
-      <figure>
-        <img src="media/setup.jpg"
-             alt="Uppkoppling av Arduino och drivkretsar"
-             data-full="media/setup.jpg">
-        <figcaption>
-          I denna bilden ser man H brygga kretsen som arduinon använder för att styra motorerna, man ser pca korten som styr alla leds samt LED display som styrs av arduinon med hjälp av en shift register.
-        </figcaption>
-      </figure>
+        <figure>
+          <img src="media/setup.jpg"
+               alt="Uppkoppling av Arduino och drivkretsar"
+               data-full="media/setup.jpg">
+          <figcaption>
+            I denna bilden ser man H-brygga kretsen som Arduino använder för att styra motorerna, PCA-korten som styr LEDs samt LED-display som styrs via shift register.
+          </figcaption>
+        </figure>
 
-  <!-- EXEMPEL: lägg fler bilder så här -->
-      <figure>
-        <img src="media/sensor.jpg" alt="Kretskort" data-full="media/sensor.jpg">
-        <figcaption>
-          Bild på sensorer som detekterar hinder. 
-        </figcaption>
-      </figure>
+        <figure>
+          <img src="media/sensor.jpg" alt="Sensorer som detekterar hinder" data-full="media/sensor.jpg">
+          <figcaption>
+            Bild på sensorer som detekterar hinder.
+          </figcaption>
+        </figure>
       </div>
     </section>
 
+    <!-- NY: HÅRDVARA MED "KORT I KORT" -->
     <section class="card pad" id="build" style="margin-top:14px">
       <h2>Hårdvara</h2>
-      <ul>
-        <li>Arduino (Uno / Uno R4)</li>
-        <li>DRV8833 motor driver (H-brygga)</li>
-        <li>PCA9685 PWM-driver (I²C, flera adresser)</li>
-        <li>Joystick</li>
-        <li>Sensorer för positions- och kollisionsdetektion</li>
-      </ul>
+
+      <div class="grid">
+        <!-- Vänster: lista -->
+        <div class="subcard">
+          <h3>Komponenter</h3>
+          <ul>
+            <li>Arduino (Uno / Uno R4)</li>
+            <li>DRV8833 motor driver (H-brygga)</li>
+            <li>PCA9685 PWM-driver (I²C, flera adresser)</li>
+            <li>Joystick</li>
+            <li>Sensorer för positions- och kollisionsdetektion</li>
+          </ul>
+        </div>
+
+        <!-- Höger: kort beskrivning -->
+        <aside class="subcard">
+          <h3>Vad det gör</h3>
+          <p><b>Arduino</b> Styr logiken för hela spelet. Kombinerar alla olika kretsar till en.</p>
+          <p><b>DRV8833</b> Driver motorerna med PWM från arduino. Externt 9 Volt batteri kopplas för att ge ström till motorer.</p>
+          <p><b>PCA9685</b> styr alla LEDs via I²C och arduino.</p>
+          
+        </aside>
+      </div>
     </section>
 
     <section class="card pad" id="code" style="margin-top:14px">
@@ -319,20 +353,19 @@
     // type: "youtube" eller "mp4"
     // ==========================
     const videos = [
-  {
-    type: "youtube",
-    title: "Flappy Diode – Demo",
-    note: "Kort demo av spelet.",
-    id: "YRpkC8XQxtg"
-  },
-  {
-    type: "youtube",
-    title: "Sensorer – hinderigenkänning",
-    note: "Visar hur sensorerna detekterar hinder under spelets gång och hur poängräknaren går upp när sensorer känner av att spelare tagit sig genom hinder.",
-    id: "X83KD97dS8s"
-  }
-];
-
+      {
+        type: "youtube",
+        title: "Flappy Diode – Demo",
+        note: "Kort demo av spelet.",
+        id: "YRpkC8XQxtg"
+      },
+      {
+        type: "youtube",
+        title: "Sensorer – hinderigenkänning",
+        note: "Visar hur sensorerna detekterar hinder under spelets gång och hur poängräknaren går upp när sensorer känner av att spelare tagit sig genom hinder.",
+        id: "X83KD97dS8s"
+      }
+    ];
 
     const videoGrid = document.getElementById("videoGrid");
 
@@ -360,7 +393,6 @@
 
         if(v.type === "youtube"){
           const id = esc(v.id || "");
-          // OBS: om du får "Playback error", testa att byta till youtube-nocookie eller tvärtom
           media = `
             <div class="videoWrap">
               <iframe
