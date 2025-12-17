@@ -244,7 +244,7 @@
 
     <section class="card pad" id="media" style="margin-top:14px">
       <h2>Video</h2>
-      <p>Tips: om YouTube-embed krånglar p.g.a. restriktioner i din webbläsare, testa annan browser eller lägg en mp4 i <code>media/</code>.</p>
+      <p>Här visas två videos. Den ena är den slutliga produkten, den andra visar hur våra sensorer känner igen hinder och håller koll på poäng.</p>
       <div class="videoGrid" id="videoGrid"></div>
     </section>
 
@@ -319,12 +319,20 @@
     // type: "youtube" eller "mp4"
     // ==========================
     const videos = [
-      // YouTube-exempel (lägg bara in ID:t)
-      { type: "youtube", title: "Flappy Diode – Demo", note: "Kort demo av spelet.", id: "YRpkC8XQxtg" },
+  {
+    type: "youtube",
+    title: "Flappy Diode – Demo",
+    note: "Kort demo av spelet.",
+    id: "YRpkC8XQxtg"
+  },
+  {
+    type: "youtube",
+    title: "Sensorer – hinderigenkänning",
+    note: "Visar hur sensorerna detekterar hinder under spelets gång och hur poängräknaren går upp när sensorer känner av att spelare tagit sig genom hinder.",
+    id: "X83KD97dS8s"
+  }
+];
 
-      // mp4-exempel (om du lägger en mp4 i media/)
-      // { type: "mp4", title: "Demo (mp4)", note: "Video direkt från repo.", src: "media/demo.mp4" },
-    ];
 
     const videoGrid = document.getElementById("videoGrid");
 
