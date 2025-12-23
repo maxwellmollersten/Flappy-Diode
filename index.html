@@ -242,6 +242,34 @@
       font-size:13px;
     }
 
+    /* === LINKEDIN POSTS (NY) === */
+    .liGrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:14px;
+      margin-top:14px;
+    }
+    @media (max-width: 860px){ .liGrid{grid-template-columns:1fr} }
+
+    .liCard{
+      border-radius:16px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      overflow:hidden;
+    }
+    .liThumb{
+      width:100%;
+      aspect-ratio: 16/9;
+      background: rgba(0,0,0,.25);
+      display:block;
+      object-fit: cover;
+      cursor: zoom-in;
+    }
+    .liMeta{padding:12px 14px}
+    .liMeta b{display:block; margin-bottom:4px}
+    .liMeta small{color:var(--muted); line-height:1.5}
+    .liActions{margin-top:10px; display:flex; gap:10px; flex-wrap:wrap}
+
     /* Lightbox */
     .lightbox{
       position:fixed; inset:0;
@@ -309,6 +337,7 @@
       <a class="pill" href="#media">Video</a>
       <a class="pill" href="#gallery">Galleri</a>
       <a class="pill" href="#build">Hårdvara</a>
+      <a class="pill" href="#linkedin">LinkedIn</a>
       <a class="pill" href="#code">Kod</a>
     </nav>
   </div>
@@ -408,6 +437,50 @@
     </div>
   </section>
 
+  <!-- LINKEDIN (NY SEKTION) -->
+  <section class="card pad" id="linkedin" style="margin-top:14px">
+    <h2>LinkedIn-inlägg</h2>
+    <p>Två snapshots från LinkedIn + länk för att öppna inlägget.</p>
+
+    <div class="liGrid">
+      <!-- Post 1 -->
+      <article class="liCard">
+        <img
+          class="liThumb"
+          src="media/linkedin-post-1.jpg"
+          alt="LinkedIn-inlägg 1"
+          data-full="media/linkedin-post-1.jpg"
+        />
+        <div class="liMeta">
+          <b>Inlägg 1</b>
+          <small>Beskrivning (valfritt) – skriv kort vad inlägget handlar om.</small>
+          <div class="liActions">
+            <a class="btn" href="PASTE_LINKEDIN_URL_1" target="_blank" rel="noreferrer">Öppna inlägg</a>
+            <a class="btn primary" href="media/linkedin-post-1.jpg" target="_blank" rel="noreferrer">Öppna bild</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Post 2 -->
+      <article class="liCard">
+        <img
+          class="liThumb"
+          src="media/linkedin-post-2.jpg"
+          alt="LinkedIn-inlägg 2"
+          data-full="media/linkedin-post-2.jpg"
+        />
+        <div class="liMeta">
+          <b>Inlägg 2</b>
+          <small>Beskrivning (valfritt) – skriv kort vad inlägget handlar om.</small>
+          <div class="liActions">
+            <a class="btn" href="PASTE_LINKEDIN_URL_2" target="_blank" rel="noreferrer">Öppna inlägg</a>
+            <a class="btn primary" href="media/linkedin-post-2.jpg" target="_blank" rel="noreferrer">Öppna bild</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
   <!-- KOD -->
   <section class="card pad" id="code" style="margin-top:14px">
     <h2>Kod & dokumentation</h2>
@@ -504,8 +577,8 @@
   }
 
   // ==========================
-  // GALLERY + PREVIEW: click -> lightbox
-  // (fångar alla img med data-full)
+  // ALLA BILDER med data-full -> lightbox
+  // (inkl preview + galleri + linkedin)
   // ==========================
   const lightbox = document.getElementById("lightbox");
   const lightboxImg = document.getElementById("lightboxImg");
