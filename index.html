@@ -1,11 +1,11 @@
 <!-- prettier-ignore-file -->
 <!DOCTYPE html>
-<html lang="sv">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Flappy Diode</title>
-  <meta name="description" content="Fysiskt elektronikspel inspirerat av Flappy Bird." />
+  <meta name="description" content="A physical electronics game inspired by Flappy Bird." />
 
   <style>
     :root{
@@ -128,7 +128,7 @@
       background: linear-gradient(135deg, rgba(122,162,255,.20), rgba(110,243,197,.12));
     }
 
-    /* === ÖVERSIKT: text vänster + bild höger === */
+    /* === OVERVIEW: text left + image right === */
     .heroRow{
       display:grid;
       grid-template-columns: 1.15fr .85fr;
@@ -169,7 +169,7 @@
       pointer-events:none;
     }
 
-    /* Inner "kort" i kortet */
+    /* Inner "card" inside the card */
     .subcard{
       border-radius:16px;
       border:1px solid rgba(255,255,255,.14);
@@ -226,7 +226,7 @@
     }
 
     /* =========================
-       GALLERY: lika stora + mindre thumbnails
+       GALLERY: same size + smaller thumbnails
        ========================= */
     .gallery{
       display:grid;
@@ -237,7 +237,7 @@
     }
     figure{margin:0}
 
-    /* gör varje item konsekvent: bild "kort" + caption under */
+    /* make each item consistent: image "card" + caption below */
     .gallery figure{
       display:grid;
       grid-template-rows: auto 1fr;
@@ -245,10 +245,10 @@
       min-width:0;
     }
 
-    /* fast (liten) thumbnail-yta med samma proportioner */
+    /* fixed (small) thumbnail area with consistent aspect ratio */
     .gallery .thumb{
       width:100%;
-      aspect-ratio: 4 / 3;      /* samma storlek oavsett originalbild */
+      aspect-ratio: 4 / 3;
       border-radius:14px;
       border:1px solid rgba(255,255,255,.15);
       overflow:hidden;
@@ -256,12 +256,12 @@
       box-shadow: none;
     }
 
-    /* själva bilden fyller ytan */
+    /* image fills the thumbnail area */
     .gallery .thumb img{
       width:100%;
       height:100%;
       display:block;
-      object-fit: cover;         /* beskär för att passa, istället för olika höjd */
+      object-fit: cover;
       cursor: zoom-in;
       transition: transform .15s ease, box-shadow .15s ease;
     }
@@ -270,10 +270,10 @@
       box-shadow: 0 12px 30px rgba(0,0,0,.45);
     }
 
-    /* gör dem lite mindre på stora skärmar */
+    /* slightly smaller on larger screens */
     @media (min-width: 861px){
-      .gallery{ grid-template-columns: repeat(2, minmax(0, 1fr)); } /* 2 kolumner = mindre thumbnails */
-      .gallery .thumb{ aspect-ratio: 5 / 4; } /* lite “lägre” look, fortfarande lika */
+      .gallery{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .gallery .thumb{ aspect-ratio: 5 / 4; }
     }
 
     figcaption{
@@ -282,7 +282,7 @@
       font-size:13px;
     }
 
-    /* LinkedIn: 1 bild */
+    /* LinkedIn: 1 image */
     .liFigure{
       margin-top:14px;
     }
@@ -363,21 +363,21 @@
       <span class="logo" aria-hidden="true"></span>
       <span>Flappy Diode</span>
     </a>
-    <nav aria-label="Navigering">
-      <a class="pill back" href="https://maxwellmollersten.github.io/projects/">← Alla projekt</a>
-      <a class="pill" href="#overview">Översikt</a>
+    <nav aria-label="Navigation">
+      <a class="pill back" href="https://maxwellmollersten.github.io/projects/">← All projects</a>
+      <a class="pill" href="#overview">Overview</a>
       <a class="pill" href="#media">Video</a>
-      <a class="pill" href="#gallery">Galleri</a>
-      <a class="pill" href="#build">Hårdvara</a>
+      <a class="pill" href="#gallery">Gallery</a>
+      <a class="pill" href="#build">Hardware</a>
       <a class="pill" href="#linkedin">LinkedIn</a>
-      <a class="pill" href="#code">Kod</a>
+      <a class="pill" href="#code">Code</a>
     </nav>
   </div>
 </header>
 
 <main id="top" class="wrap">
 
-  <!-- ÖVERSIKT -->
+  <!-- OVERVIEW -->
   <section class="card pad" id="overview">
     <div class="heroRow">
 
@@ -385,40 +385,39 @@
         <h1>Flappy Diode</h1>
 
         <p>
-          Ett fysiskt elektronikspel inspirerat av <i>Flappy Bird</i>.
-          Projektet byggdes i en grupp på tre där vi samarbetade tätt och itererade snabbt mellan
-          hårdvara och kod för att få ett stabilt, spelbart system.
+          A physical electronics game inspired by <i>Flappy Bird</i>.
+          This project was built in a team of three, where we worked closely and iterated quickly between
+          hardware and firmware to achieve a stable, playable system.
         </p>
 
         <p>
-          Vi integrerade motorstyrning, sensorer och LED-drivning för ett interaktivt spel med poängräkning
-          och “game over”-logik, och testade oss fram tills timing, strömförsörjning och signaler fungerade
-          pålitligt tillsammans.
+          We integrated motor control, sensors, and LED driving for an interactive game with scoring
+          and “game over” logic, and iterated until timing, power, and signals were reliable together.
         </p>
 
         <div class="chips">
           <span class="chip">Arduino</span>
           <span class="chip">DRV8833</span>
           <span class="chip">PCA9685</span>
-          <span class="chip">LED</span>
-          <span class="chip">Sensorer</span>
-          <span class="chip">Teamarbete</span>
+          <span class="chip">LEDs</span>
+          <span class="chip">Sensors</span>
+          <span class="chip">Teamwork</span>
         </div>
 
         <div class="cta">
-          <a class="btn primary" href="https://github.com/maxwellmollerstten/Flappy-Diode" target="_blank" rel="noreferrer">Repo</a>
-          <a class="btn" href="#gallery">Se galleri</a>
+          <a class="btn primary" href="https://github.com/maxwellmollerstten/Flappy-Diode" target="_blank" rel="noreferrer">Repository</a>
+          <a class="btn" href="#gallery">View gallery</a>
         </div>
       </div>
 
-      <!-- LILLA BILDEN HÖGER -->
+      <!-- SMALL IMAGE (RIGHT) -->
       <div class="previewWrap">
         <img
           src="media/flappybird.jpg"
           alt="Flappy Diode gameplay"
           data-full="media/flappybird.jpg"
         />
-        <div class="previewHint">Klicka för att förstora</div>
+        <div class="previewHint">Click to enlarge</div>
       </div>
 
     </div>
@@ -427,55 +426,57 @@
   <!-- VIDEO -->
   <section class="card pad" id="media" style="margin-top:14px">
     <h2>Video</h2>
-    <p>Här visas två videos. Den ena är den slutliga produkten, den andra visar hur våra sensorer känner igen hinder och håller koll på poäng.</p>
+    <p>Two videos are shown below: the final demo and a short clip showing how the sensors detect obstacles and how scoring works.</p>
     <div class="videoGrid" id="videoGrid"></div>
   </section>
 
-  <!-- GALLERI -->
+  <!-- GALLERY -->
   <section class="card pad" id="gallery" style="margin-top:14px">
-    <h2>Galleri</h2>
-    <p>Klicka på en bild för att se den större.</p>
+    <h2>Gallery</h2>
+    <p>Click an image to view it larger.</p>
 
     <div class="gallery">
       <figure>
         <div class="thumb">
-          <img src="media/setup.jpg" alt="Uppkoppling av Arduino och drivkretsar" data-full="media/setup.jpg">
+          <img src="media/setup.jpg" alt="Wiring of the Arduino and driver circuits" data-full="media/setup.jpg">
         </div>
         <figcaption>
-          I denna bilden ser man H-brygga kretsen som Arduino använder för att styra motorerna, PCA-korten som styr LEDs samt LED-display som styrs via shift register.
+          The setup shows the H-bridge motor driver used by the Arduino, the PCA9685 boards driving the LEDs, and the LED display controlled via shift registers.
         </figcaption>
       </figure>
 
       <figure>
         <div class="thumb">
-          <img src="media/sensor.jpg" alt="Testning av spelets funktioner" data-full="media/sensor.jpg">
+          <img src="media/sensor.jpg" alt="Testing the game during development" data-full="media/sensor.jpg">
         </div>
-        <figcaption>Bild på spelet när det var under konstruktion, under dioderna ser man sensorer som detekterar hinder.</figcaption>
+        <figcaption>
+          The game during development. Under the LEDs, sensors detect obstacles for collision/score logic.
+        </figcaption>
       </figure>
     </div>
   </section>
 
-  <!-- HÅRDVARA -->
+  <!-- HARDWARE -->
   <section class="card pad" id="build" style="margin-top:14px">
-    <h2>Hårdvara</h2>
+    <h2>Hardware</h2>
     <div class="grid">
 
       <div class="subcard">
-        <h3>Komponenter</h3>
+        <h3>Components</h3>
         <ul>
           <li>Arduino (Uno / Uno R4)</li>
-          <li>DRV8833 motor driver (H-brygga)</li>
-          <li>PCA9685 PWM-driver (I²C, flera adresser)</li>
+          <li>DRV8833 motor driver (H-bridge)</li>
+          <li>PCA9685 PWM driver (I²C, multiple addresses)</li>
           <li>Joystick</li>
-          <li>Sensorer för positions- och kollisionsdetektion</li>
+          <li>Sensors for position and collision detection</li>
         </ul>
       </div>
 
       <aside class="subcard">
-        <h3>Vad det gör</h3>
-        <p><b>Arduino</b> Styr logiken för hela spelet och koordinerar alla delsystem.</p>
-        <p><b>DRV8833</b> Driver motorerna med PWM från Arduino. Externt 9V-batteri driver motorerna.</p>
-        <p><b>PCA9685</b> Styr LEDs via I²C så att vi kan driva många kanaler stabilt.</p>
+        <h3>What it does</h3>
+        <p><b>Arduino</b> Runs the game logic and coordinates all subsystems.</p>
+        <p><b>DRV8833</b> Drives the motors with PWM from the Arduino. An external 9V battery powers the motors.</p>
+        <p><b>PCA9685</b> Drives the LEDs over I²C so we can control many channels reliably.</p>
       </aside>
 
     </div>
@@ -484,35 +485,35 @@
   <!-- LINKEDIN -->
   <section class="card pad" id="linkedin" style="margin-top:14px">
     <h2>LinkedIn</h2>
-    <p>Inlägg från projektet. Klicka på bilden för att förstora eller öppna inlägget.</p>
+    <p>Post from the project. Click the image to enlarge, or open the post.</p>
 
     <div class="cta">
       <a class="btn primary"
          href="https://www.linkedin.com/feed/update/urn:li:activity:7407694960361242624/"
          target="_blank"
          rel="noreferrer">
-        Öppna LinkedIn-inlägg
+        Open LinkedIn post
       </a>
     </div>
 
     <figure class="liFigure">
       <img
         src="media/linkedin-1.jpg"
-        alt="LinkedIn-inlägg – Flappy Diode"
+        alt="LinkedIn post — Flappy Diode"
         data-full="media/linkedin-1.jpg"
       />
-      <figcaption>Snapshot från LinkedIn-inlägg om Flappy Diode.</figcaption>
+      <figcaption>Snapshot from the LinkedIn post about Flappy Diode.</figcaption>
     </figure>
   </section>
 
-  <!-- KOD -->
+  <!-- CODE -->
   <section class="card pad" id="code" style="margin-top:14px">
-    <h2>Kod & dokumentation</h2>
-    <p>All kod och dokumentation finns i detta repo. Struktur:</p>
+    <h2>Code & documentation</h2>
+    <p>All code and documentation are available in the repository. Structure:</p>
     <ul>
-      <li><code>index.html</code> – den här sidan</li>
-      <li><code>media/</code> – bilder + ev. mp4</li>
-      <li><code>src/</code> – Arduino IDE kod</li>
+      <li><code>index.html</code> – this page</li>
+      <li><code>media/</code> – images (and optionally mp4)</li>
+      <li><code>src/</code> – Arduino IDE code</li>
     </ul>
   </section>
 
@@ -524,18 +525,23 @@
 
 <!-- Lightbox overlay -->
 <div class="lightbox" id="lightbox" aria-hidden="true">
-  <div class="hint">Klicka eller tryck ESC för att stänga</div>
+  <div class="hint">Click or press ESC to close</div>
   <img id="lightboxImg" alt="">
 </div>
 
 <script>
   // ==========================
-  // VIDEO: lägg till videos här
-  // type: "youtube" eller "mp4"
+  // VIDEO: add videos here
+  // type: "youtube" or "mp4"
   // ==========================
   const videos = [
-    { type: "youtube", title: "Flappy Diode – Demo", note: "Kort demo av spelet.", id: "YRpkC8XQxtg" },
-    { type: "youtube", title: "Sensorer – hinderigenkänning", note: "Visar hur sensorerna detekterar hinder under spelets gång och hur poängräknaren går upp när sensorer känner av att spelare tagit sig genom hinder.", id: "X83KD97dS8s" }
+    { type: "youtube", title: "Flappy Diode — Demo", note: "Short demo of the game.", id: "YRpkC8XQxtg" },
+    {
+      type: "youtube",
+      title: "Sensors — Obstacle detection",
+      note: "Shows how the sensors detect obstacles during gameplay and how the score increments when the player passes an obstacle.",
+      id: "X83KD97dS8s"
+    }
   ];
 
   const videoGrid = document.getElementById("videoGrid");
@@ -551,8 +557,8 @@
       videoGrid.innerHTML = `
         <div class="videoCard">
           <div class="meta">
-            <b>Inga videos inlagda än</b>
-            <small>Lägg till ett objekt i listan <code>videos</code> i koden.</small>
+            <b>No videos added yet</b>
+            <small>Add an item to the <code>videos</code> array in the code.</small>
           </div>
         </div>
       `;
@@ -582,7 +588,7 @@
           <div class="videoWrap">
             <video controls preload="metadata">
               <source src="${src}" type="video/mp4">
-              Din webbläsare stödjer inte video-taggen.
+              Your browser does not support the video tag.
             </video>
           </div>
         `;
@@ -601,7 +607,7 @@
   }
 
   // ==========================
-  // ALLA BILDER med data-full -> lightbox
+  // ALL IMAGES with data-full -> lightbox
   // ==========================
   const lightbox = document.getElementById("lightbox");
   const lightboxImg = document.getElementById("lightboxImg");
