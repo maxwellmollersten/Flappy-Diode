@@ -242,33 +242,24 @@
       font-size:13px;
     }
 
-    /* === LINKEDIN (1 post, 2 bilder) === */
-    .liGrid{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:14px;
+    /* LinkedIn: 1 bild */
+    .liFigure{
       margin-top:14px;
     }
-    @media (max-width: 860px){ .liGrid{grid-template-columns:1fr} }
-
-    .liCard{
-      border-radius:16px;
-      border:1px solid var(--line);
-      background: rgba(255,255,255,.03);
-      overflow:hidden;
-    }
-    .liThumb{
+    .liFigure img{
       width:100%;
-      aspect-ratio: 16/9;
-      background: rgba(0,0,0,.25);
+      max-width:720px;
+      margin:0 auto;
       display:block;
-      object-fit: cover;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.15);
       cursor: zoom-in;
+      background:#000;
     }
-    .liMeta{padding:12px 14px}
-    .liMeta b{display:block; margin-bottom:4px}
-    .liMeta small{color:var(--muted); line-height:1.5}
-    .liActions{margin-top:10px; display:flex; gap:10px; flex-wrap:wrap}
+    .liFigure figcaption{
+      text-align:center;
+      margin-top:10px;
+    }
 
     /* Lightbox */
     .lightbox{
@@ -351,11 +342,13 @@
 
       <div>
         <h1>Flappy Diode</h1>
+
         <p>
           Ett fysiskt elektronikspel inspirerat av <i>Flappy Bird</i>.
           Projektet byggdes i en grupp på tre där vi samarbetade tätt och itererade snabbt mellan
           hårdvara och kod för att få ett stabilt, spelbart system.
         </p>
+
         <p>
           Vi integrerade motorstyrning, sensorer och LED-drivning för ett interaktivt spel med poängräkning
           och “game over”-logik, och testade oss fram tills timing, strömförsörjning och signaler fungerade
@@ -377,7 +370,7 @@
         </div>
       </div>
 
-      <!-- LILLA BILDEN HÖGER (flappybird.jpg) -->
+      <!-- LILLA BILDEN HÖGER -->
       <div class="previewWrap">
         <img
           src="media/flappybird.jpg"
@@ -443,42 +436,28 @@
     </div>
   </section>
 
-  <!-- LINKEDIN: 1 inlägg, 2 bilder -->
+  <!-- LINKEDIN -->
   <section class="card pad" id="linkedin" style="margin-top:14px">
     <h2>LinkedIn</h2>
-    <p>Ett LinkedIn-inlägg med två bilder. Klicka på bilderna för att förstora eller öppna inlägget.</p>
+    <p>Inlägg från projektet. Klicka på bilden för att förstora eller öppna inlägget.</p>
 
     <div class="cta">
-      <a class="btn primary" href="PASTE_LINKEDIN_POST_URL" target="_blank" rel="noreferrer">Öppna LinkedIn-inlägg</a>
+      <a class="btn primary"
+         href="https://www.linkedin.com/feed/update/urn:li:activity:7407694960361242624/"
+         target="_blank"
+         rel="noreferrer">
+        Öppna LinkedIn-inlägg
+      </a>
     </div>
 
-    <div class="liGrid">
-      <article class="liCard">
-        <img
-          class="liThumb"
-          src="media/linkedin-1.jpg"
-          alt="LinkedIn-bild 1"
-          data-full="media/linkedin-1.jpg"
-        />
-        <div class="liMeta">
-          <b>Bild 1</b>
-          <small>Snapshot från samma LinkedIn-inlägg.</small>
-        </div>
-      </article>
-
-      <article class="liCard">
-        <img
-          class="liThumb"
-          src="media/linkedin-2.jpg"
-          alt="LinkedIn-bild 2"
-          data-full="media/linkedin-2.jpg"
-        />
-        <div class="liMeta">
-          <b>Bild 2</b>
-          <small>Snapshot från samma LinkedIn-inlägg.</small>
-        </div>
-      </article>
-    </div>
+    <figure class="liFigure">
+      <img
+        src="media/linkedin-1.jpg"
+        alt="LinkedIn-inlägg – Flappy Diode"
+        data-full="media/linkedin-1.jpg"
+      />
+      <figcaption>Snapshot från LinkedIn-inlägg om Flappy Diode.</figcaption>
+    </figure>
   </section>
 
   <!-- KOD -->
@@ -578,7 +557,6 @@
 
   // ==========================
   // ALLA BILDER med data-full -> lightbox
-  // (inkl preview + galleri + linkedin)
   // ==========================
   const lightbox = document.getElementById("lightbox");
   const lightboxImg = document.getElementById("lightboxImg");
