@@ -25,7 +25,7 @@
 
     body{
       margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
       color:var(--text);
       background:
         radial-gradient(900px 500px at 10% 0%, rgba(122,162,255,.20), transparent 60%),
@@ -47,103 +47,110 @@
       max-width:var(--max);
       margin:0 auto;
       padding:12px 18px;
-      display:flex; justify-content:space-between; align-items:center;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
     }
 
     .brand{
-      display:flex; gap:10px; font-weight:800; text-decoration:none; align-items:center
+      display:flex;
+      align-items:center;
+      gap:10px;
+      text-decoration:none;
+      font-weight:800;
     }
 
     .logo{
-      width:14px; height:14px; border-radius:50%;
+      width:14px; height:14px; border-radius:999px;
       background: linear-gradient(135deg, var(--a), var(--b));
+      box-shadow: 0 0 0 6px rgba(122,162,255,.10);
     }
 
     nav{display:flex; gap:10px; flex-wrap:wrap}
 
     .pill{
+      text-decoration:none;
+      color:var(--muted);
       padding:8px 10px;
       border-radius:999px;
-      color:var(--muted);
-      text-decoration:none;
+      border:1px solid transparent;
+    }
+    .pill:hover{
+      color:var(--text);
+      border-color:var(--line);
+      background:rgba(255,255,255,.04)
     }
 
-    .pill:hover{color:var(--text)}
-
     .card{
-      border-radius:var(--radius);
+      border-radius: var(--radius);
       border:1px solid var(--line);
-      background: linear-gradient(
-        180deg,
-        rgba(18,26,48,.85),
-        rgba(12,18,34,.72)
-        );
+      background: rgba(12,18,34,.72);
       box-shadow: var(--shadow);
+      overflow:hidden;
     }
 
     .pad{padding:22px}
 
-    h1{margin:0 0 10px; font-size:36px}
-    h2{margin:0 0 10px}
-    p{color:var(--muted); line-height:1.6}
+    h1{margin:0 0 10px; font-size: clamp(28px, 3.8vw, 44px); line-height:1.12}
+    h2{margin:0 0 10px; font-size:22px}
+    p{margin:0 0 12px; color:var(--muted); line-height:1.65}
+    ul{margin:0; padding-left:18px; color:var(--muted); line-height:1.7}
 
-    .chips{display:flex; gap:8px; flex-wrap:wrap; margin-top:12px}
-
+    .chips{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px}
     .chip{
-      font-size:12px;
-      padding:6px 10px;
-      border-radius:999px;
-      border:1px solid var(--line);
-    }
-
-    .cta{display:flex; gap:10px; margin-top:14px; flex-wrap:wrap}
-
-    .btn{
-      padding:10px 12px;
-      border-radius:12px;
+      font-size:12px; padding:7px 10px; border-radius:999px;
       border:1px solid var(--line);
       background: rgba(255,255,255,.04);
-      font-weight:800;
-      text-decoration:none;
+      color: rgba(234,240,255,.92);
     }
 
+    .cta{display:flex; gap:10px; flex-wrap:wrap; margin-top:14px}
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap:8px;
+      padding:10px 12px; border-radius:12px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      text-decoration:none; font-weight:800;
+    }
     .btn.primary{
-      background: linear-gradient(135deg, rgba(122,162,255,.25), rgba(110,243,197,.15));
+      border-color: rgba(122,162,255,.35);
+      background: linear-gradient(135deg, rgba(122,162,255,.20), rgba(110,243,197,.12));
     }
 
-    /* === OVERVIEW LAYOUT === */
+    /* === ÖVERSIKT: text vänster + bild höger === */
     .heroRow{
       display:grid;
-      grid-template-columns: 1.2fr .8fr;
-      gap:16px;
-      align-items:center;
+      grid-template-columns: 1.15fr .85fr;
+      gap:14px;
+      align-items:start;
     }
+    @media (max-width: 860px){ .heroRow{grid-template-columns:1fr} }
 
-    @media (max-width:860px){
-      .heroRow{grid-template-columns:1fr}
-    }
-
-    
     .previewWrap{
       max-width:420px;
       margin-left:auto;
       position:relative;
     }
-
     .previewWrap img{
       width:100%;
+      display:block;
       border-radius:14px;
       border:1px solid rgba(255,255,255,.15);
+      background:#000;
       cursor: zoom-in;
-      display:block;
+      transition: transform .15s ease, box-shadow .15s ease;
     }
-
+    .previewWrap img:hover{
+      transform: scale(1.01);
+      box-shadow: 0 12px 30px rgba(0,0,0,.45);
+    }
     .previewHint{
       position:absolute;
       bottom:10px;
       left:10px;
       font-size:12px;
-      color:#fff;
+      color: rgba(234,240,255,.9);
       background: rgba(0,0,0,.45);
       border:1px solid rgba(255,255,255,.16);
       padding:6px 10px;
@@ -152,21 +159,88 @@
       pointer-events:none;
     }
 
+    /* Inner "kort" i kortet */
+    .subcard{
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.04);
+      box-shadow: 0 10px 24px rgba(0,0,0,.28);
+      padding:14px;
+    }
+    .subcard h3{
+      margin:0 0 8px;
+      font-size:14px;
+      letter-spacing:.2px;
+      color: rgba(234,240,255,.92);
+    }
+    .subcard p{margin:0 0 10px}
+    .subcard p:last-child{margin:0}
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap:14px;
+      align-items:start;
+    }
+    @media (max-width: 860px){ .grid{grid-template-columns:1fr} }
+
+    /* Video */
+    .videoGrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+      margin-top:12px;
+    }
+    @media (max-width: 860px){ .videoGrid{grid-template-columns:1fr} }
+
+    .videoCard{
+      border-radius:16px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      overflow:hidden;
+    }
+    .videoCard .meta{padding:12px 14px}
+    .videoCard b{display:block; margin-bottom:4px}
+    .videoCard small{color:var(--muted); line-height:1.5}
+
+    .videoWrap{
+      position:relative;
+      width:100%;
+      aspect-ratio: 16/9;
+      background: rgba(0,0,0,.35);
+    }
+    .videoWrap iframe, .videoWrap video{
+      position:absolute; inset:0;
+      width:100%; height:100%;
+      border:0;
+    }
+
     /* Gallery */
     .gallery{
       display:grid;
       grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
       gap:14px;
+      margin-top:14px;
     }
-
     .gallery img{
       width:100%;
       border-radius:14px;
       border:1px solid rgba(255,255,255,.15);
+      background:#000;
       cursor: zoom-in;
+      transition: transform .15s ease, box-shadow .15s ease;
     }
-
-    figcaption{font-size:13px; color:var(--muted); margin-top:8px}
+    .gallery img:hover{
+      transform: scale(1.02);
+      box-shadow: 0 12px 30px rgba(0,0,0,.45);
+    }
+    figure{margin:0}
+    figcaption{
+      margin-top:8px;
+      color:var(--muted);
+      line-height:1.55;
+      font-size:13px;
+    }
 
     /* Lightbox */
     .lightbox{
@@ -176,24 +250,49 @@
       align-items:center;
       justify-content:center;
       z-index:9999;
+      padding: 22px;
     }
-
     .lightbox.open{display:flex}
-
     .lightbox img{
-      max-width:94vw;
-      max-height:92vh;
-      border-radius:16px;
+      max-width: 94vw;
+      max-height: 92vh;
+      border-radius: 16px;
+      border:1px solid rgba(255,255,255,.18);
+      box-shadow: 0 20px 70px rgba(0,0,0,.55);
       cursor: zoom-out;
+    }
+    .lightbox .hint{
+      position:fixed;
+      top:14px; right:14px;
+      color: rgba(234,240,255,.80);
+      font-size: 12px;
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.06);
+      padding:8px 10px;
+      border-radius: 999px;
+      backdrop-filter: blur(10px);
     }
 
     footer{
-      margin-top:20px;
+      margin-top:18px;
       padding-top:18px;
       border-top:1px solid var(--line);
-      font-size:13px;
       color:var(--muted);
-      display:flex; justify-content:space-between;
+      font-size:13px;
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    code{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 0.95em;
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      padding: 2px 6px;
+      border-radius: 8px;
+      color: rgba(234,240,255,.92);
     }
   </style>
 </head>
@@ -202,19 +301,22 @@
 <header>
   <div class="topbar">
     <a class="brand" href="#top">
-      <span class="logo"></span>
+      <span class="logo" aria-hidden="true"></span>
       <span>Flappy Diode</span>
     </a>
-    <nav>
+    <nav aria-label="Navigering">
       <a class="pill" href="#overview">Översikt</a>
+      <a class="pill" href="#media">Video</a>
       <a class="pill" href="#gallery">Galleri</a>
+      <a class="pill" href="#build">Hårdvara</a>
+      <a class="pill" href="#code">Kod</a>
     </nav>
   </div>
 </header>
 
 <main id="top" class="wrap">
 
-  <!-- OVERVIEW -->
+  <!-- ÖVERSIKT -->
   <section class="card pad" id="overview">
     <div class="heroRow">
 
@@ -235,13 +337,12 @@
         </div>
 
         <div class="cta">
-          <a class="btn primary"
-             href="https://github.com/maxwellmollerstten/Flappy-Diode"
-             target="_blank" rel="noreferrer">Repo</a>
+          <a class="btn primary" href="https://github.com/maxwellmollerstten/Flappy-Diode" target="_blank" rel="noreferrer">Repo</a>
           <a class="btn" href="#gallery">Se galleri</a>
         </div>
       </div>
 
+      <!-- LILLA BILDEN HÖGER (flappybird.jpg) -->
       <div class="previewWrap">
         <img
           src="media/flappybird.jpg"
@@ -254,51 +355,190 @@
     </div>
   </section>
 
-  <!-- GALLERY -->
+  <!-- VIDEO -->
+  <section class="card pad" id="media" style="margin-top:14px">
+    <h2>Video</h2>
+    <p>Här visas två videos. Den ena är den slutliga produkten, den andra visar hur våra sensorer känner igen hinder och håller koll på poäng.</p>
+    <div class="videoGrid" id="videoGrid"></div>
+  </section>
+
+  <!-- GALLERI -->
   <section class="card pad" id="gallery" style="margin-top:14px">
     <h2>Galleri</h2>
+    <p>Klicka på en bild för att se den större.</p>
 
     <div class="gallery">
       <figure>
-        <img src="media/setup.jpg" data-full="media/setup.jpg" alt="">
-        <figcaption>Elektronikuppsättning med Arduino, motorstyrning och LED-drivare.</figcaption>
+        <img src="media/setup.jpg" alt="Uppkoppling av Arduino och drivkretsar" data-full="media/setup.jpg">
+        <figcaption>
+          I denna bilden ser man H-brygga kretsen som Arduino använder för att styra motorerna, PCA-korten som styr LEDs samt LED-display som styrs via shift register.
+        </figcaption>
       </figure>
+
       <figure>
-        <img src="media/sensor.jpg" data-full="media/sensor.jpg" alt="">
-        <figcaption>Sensorer som detekterar hinder under spelets gång.</figcaption>
+        <img src="media/sensor.jpg" alt="Sensorer som detekterar hinder" data-full="media/sensor.jpg">
+        <figcaption>Bild på sensorer som detekterar hinder.</figcaption>
       </figure>
     </div>
   </section>
 
+  <!-- HÅRDVARA -->
+  <section class="card pad" id="build" style="margin-top:14px">
+    <h2>Hårdvara</h2>
+    <div class="grid">
+
+      <div class="subcard">
+        <h3>Komponenter</h3>
+        <ul>
+          <li>Arduino (Uno / Uno R4)</li>
+          <li>DRV8833 motor driver (H-brygga)</li>
+          <li>PCA9685 PWM-driver (I²C, flera adresser)</li>
+          <li>Joystick</li>
+          <li>Sensorer för positions- och kollisionsdetektion</li>
+        </ul>
+      </div>
+
+      <aside class="subcard">
+        <h3>Vad det gör</h3>
+        <p><b>Arduino</b> Styr logiken för hela spelet. Kombinerar alla olika kretsar till en.</p>
+        <p><b>DRV8833</b> Driver motorerna med PWM från Arduino. Externt 9 Volt batteri kopplas för att ge ström till motorer.</p>
+        <p><b>PCA9685</b> Styr alla LEDs via I²C och Arduino.</p>
+      </aside>
+
+    </div>
+  </section>
+
+  <!-- KOD -->
+  <section class="card pad" id="code" style="margin-top:14px">
+    <h2>Kod & dokumentation</h2>
+    <p>All kod och dokumentation finns i detta repo. Struktur:</p>
+    <ul>
+      <li><code>index.html</code> – den här sidan</li>
+      <li><code>media/</code> – bilder + ev. mp4</li>
+      <li><code>src/</code> – Arduino IDE kod</li>
+    </ul>
+  </section>
+
   <footer>
     <div>© <span id="year"></span> Flappy Diode</div>
-    <div>GitHub Pages</div>
+    <div>GitHub Pages · <code>index.html</code></div>
   </footer>
 </main>
 
-<div class="lightbox" id="lightbox">
+<!-- Lightbox overlay -->
+<div class="lightbox" id="lightbox" aria-hidden="true">
+  <div class="hint">Klicka eller tryck ESC för att stänga</div>
   <img id="lightboxImg" alt="">
 </div>
 
 <script>
+  // ==========================
+  // VIDEO: lägg till videos här
+  // type: "youtube" eller "mp4"
+  // ==========================
+  const videos = [
+    { type: "youtube", title: "Flappy Diode – Demo", note: "Kort demo av spelet.", id: "YRpkC8XQxtg" },
+    { type: "youtube", title: "Sensorer – hinderigenkänning", note: "Visar hur sensorerna detekterar hinder under spelets gång och hur poängräknaren går upp när sensorer känner av att spelare tagit sig genom hinder.", id: "X83KD97dS8s" }
+  ];
+
+  const videoGrid = document.getElementById("videoGrid");
+
+  function esc(s){
+    return (s || "").replace(/[&<>"']/g, m => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+    }[m]));
+  }
+
+  function renderVideos(){
+    if(!videos.length){
+      videoGrid.innerHTML = `
+        <div class="videoCard">
+          <div class="meta">
+            <b>Inga videos inlagda än</b>
+            <small>Lägg till ett objekt i listan <code>videos</code> i koden.</small>
+          </div>
+        </div>
+      `;
+      return;
+    }
+
+    videoGrid.innerHTML = videos.map(v => {
+      const title = esc(v.title || "Video");
+      const note  = esc(v.note || "");
+      let media = "";
+
+      if(v.type === "youtube"){
+        const id = esc(v.id || "");
+        media = `
+          <div class="videoWrap">
+            <iframe
+              src="https://www.youtube.com/embed/${id}"
+              title="${title}"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen>
+            </iframe>
+          </div>
+        `;
+      } else if(v.type === "mp4"){
+        const src = esc(v.src || "");
+        media = `
+          <div class="videoWrap">
+            <video controls preload="metadata">
+              <source src="${src}" type="video/mp4">
+              Din webbläsare stödjer inte video-taggen.
+            </video>
+          </div>
+        `;
+      }
+
+      return `
+        <article class="videoCard">
+          ${media}
+          <div class="meta">
+            <b>${title}</b>
+            <small>${note}</small>
+          </div>
+        </article>
+      `;
+    }).join("");
+  }
+
+  // ==========================
+  // GALLERY + PREVIEW: click -> lightbox
+  // (fångar alla img med data-full)
+  // ==========================
   const lightbox = document.getElementById("lightbox");
   const lightboxImg = document.getElementById("lightboxImg");
 
-  document.querySelectorAll("img[data-full]").forEach(img=>{
-    img.onclick = () => {
-      lightboxImg.src = img.dataset.full || img.src;
-      lightbox.classList.add("open");
-      document.body.style.overflow = "hidden";
-    };
-  });
+  function openLightbox(src, alt){
+    lightboxImg.src = src;
+    lightboxImg.alt = alt || "";
+    lightbox.classList.add("open");
+    lightbox.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+  }
 
-  lightbox.onclick = () => {
+  function closeLightbox(){
     lightbox.classList.remove("open");
+    lightbox.setAttribute("aria-hidden", "true");
     lightboxImg.src = "";
     document.body.style.overflow = "";
-  };
+  }
+
+  document.querySelectorAll('img[data-full]').forEach(img => {
+    img.addEventListener("click", () => {
+      const full = img.getAttribute("data-full") || img.src;
+      openLightbox(full, img.alt);
+    });
+  });
+
+  lightbox.addEventListener("click", closeLightbox);
+  document.addEventListener("keydown", (e) => {
+    if(e.key === "Escape") closeLightbox();
+  });
 
   document.getElementById("year").textContent = new Date().getFullYear();
+  renderVideos();
 </script>
 </body>
 </html>
