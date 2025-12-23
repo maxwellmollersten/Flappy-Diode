@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Flappy Diode</title>
   <meta name="description" content="Fysiskt elektronikspel inspirerat av Flappy Bird." />
+
   <style>
     :root{
       --bg:#070a12;
@@ -19,139 +20,131 @@
       --a:#7aa2ff;
       --b:#6ef3c5;
     }
+
     *{box-sizing:border-box}
+
     body{
       margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
       color:var(--text);
       background:
         radial-gradient(900px 500px at 10% 0%, rgba(122,162,255,.20), transparent 60%),
         radial-gradient(900px 600px at 90% 5%, rgba(110,243,197,.16), transparent 60%),
         linear-gradient(180deg, #050714 0%, var(--bg) 55%, #05060d 100%);
     }
+
     a{color:inherit}
     .wrap{max-width:var(--max); margin:0 auto; padding:26px 18px 60px}
+
     header{
       position:sticky; top:0; z-index:20;
       backdrop-filter: blur(12px);
       background: rgba(5,7,20,.55);
       border-bottom:1px solid var(--line);
     }
+
     .topbar{
       max-width:var(--max);
       margin:0 auto;
       padding:12px 18px;
-      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      display:flex; justify-content:space-between; align-items:center;
     }
+
     .brand{
-      display:flex; align-items:center; gap:10px;
-      text-decoration:none;
-      font-weight:800;
+      display:flex; gap:10px; font-weight:800; text-decoration:none; align-items:center
     }
+
     .logo{
-      width:14px; height:14px; border-radius:999px;
+      width:14px; height:14px; border-radius:50%;
       background: linear-gradient(135deg, var(--a), var(--b));
-      box-shadow: 0 0 0 6px rgba(122,162,255,.10);
     }
+
     nav{display:flex; gap:10px; flex-wrap:wrap}
+
     .pill{
-      text-decoration:none;
-      color:var(--muted);
       padding:8px 10px;
       border-radius:999px;
-      border:1px solid transparent;
+      color:var(--muted);
+      text-decoration:none;
     }
-    .pill:hover{color:var(--text); border-color:var(--line); background:rgba(255,255,255,.04)}
+
+    .pill:hover{color:var(--text)}
+
     .card{
-      border-radius: var(--radius);
+      border-radius:var(--radius);
       border:1px solid var(--line);
       background: rgba(12,18,34,.72);
       box-shadow: var(--shadow);
-      overflow:hidden;
     }
+
     .pad{padding:22px}
-    h1{margin:0 0 10px; font-size: clamp(28px, 3.8vw, 44px); line-height:1.12}
-    h2{margin:0 0 10px; font-size:22px}
-    p{margin:0 0 12px; color:var(--muted); line-height:1.65}
-    ul{margin:0; padding-left:18px; color:var(--muted); line-height:1.7}
-    .chips{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px}
+
+    h1{margin:0 0 10px; font-size:36px}
+    h2{margin:0 0 10px}
+    p{color:var(--muted); line-height:1.6}
+
+    .chips{display:flex; gap:8px; flex-wrap:wrap; margin-top:12px}
+
     .chip{
       font-size:12px;
-      padding:7px 10px;
+      padding:6px 10px;
       border-radius:999px;
       border:1px solid var(--line);
-      background: rgba(255,255,255,.04);
-      color: rgba(234,240,255,.92);
     }
-    .cta{display:flex; gap:10px; flex-wrap:wrap; margin-top:14px}
+
+    .cta{display:flex; gap:10px; margin-top:14px; flex-wrap:wrap}
+
     .btn{
-      display:inline-flex; align-items:center; justify-content:center;
-      gap:8px;
       padding:10px 12px;
       border-radius:12px;
       border:1px solid var(--line);
       background: rgba(255,255,255,.04);
-      text-decoration:none;
       font-weight:800;
+      text-decoration:none;
     }
+
     .btn.primary{
-      border-color: rgba(122,162,255,.35);
-      background: linear-gradient(135deg, rgba(122,162,255,.20), rgba(110,243,197,.12));
+      background: linear-gradient(135deg, rgba(122,162,255,.25), rgba(110,243,197,.15));
     }
 
-    .grid{
+    /* === OVERVIEW LAYOUT === */
+    .heroRow{
       display:grid;
-      grid-template-columns: 1.15fr .85fr;
-      gap:14px;
-      align-items:start;
+      grid-template-columns: 1.2fr .8fr;
+      gap:16px;
+      align-items:center;
     }
-    @media (max-width: 860px){ .grid{grid-template-columns:1fr} }
 
-    /* Inner "kort" i kortet */
-    .subcard{
-      border-radius:16px;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.04);
-      box-shadow: 0 10px 24px rgba(0,0,0,.28);
-      padding:14px;
+    @media (max-width:860px){
+      .heroRow{grid-template-columns:1fr}
     }
-    .subcard h3{
-      margin:0 0 8px;
-      font-size:14px;
-      letter-spacing:.2px;
-      color: rgba(234,240,255,.92);
-    }
-    .subcard p{margin:0 0 10px}
-    .subcard p:last-child{margin:0}
 
-    /* Video */
-    .videoGrid{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:12px;
-      margin-top:12px;
-    }
-    @media (max-width: 860px){ .videoGrid{grid-template-columns:1fr} }
-    .videoCard{
-      border-radius:16px;
-      border:1px solid var(--line);
-      background: rgba(255,255,255,.03);
-      overflow:hidden;
-    }
-    .videoCard .meta{padding:12px 14px}
-    .videoCard b{display:block; margin-bottom:4px}
-    .videoCard small{color:var(--muted); line-height:1.5}
-    .videoWrap{
+    .previewWrap{
+      max-width:260px;
+      margin-left:auto;
       position:relative;
-      width:100%;
-      aspect-ratio: 16/9;
-      background: rgba(0,0,0,.35);
     }
-    .videoWrap iframe,
-    .videoWrap video{
-      position:absolute; inset:0;
-      width:100%; height:100%;
-      border:0;
+
+    .previewWrap img{
+      width:100%;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.15);
+      cursor: zoom-in;
+      display:block;
+    }
+
+    .previewHint{
+      position:absolute;
+      bottom:10px;
+      left:10px;
+      font-size:12px;
+      color:#fff;
+      background: rgba(0,0,0,.45);
+      border:1px solid rgba(255,255,255,.16);
+      padding:6px 10px;
+      border-radius:999px;
+      backdrop-filter: blur(10px);
+      pointer-events:none;
     }
 
     /* Gallery */
@@ -159,27 +152,16 @@
       display:grid;
       grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
       gap:14px;
-      margin-top:14px;
     }
+
     .gallery img{
       width:100%;
       border-radius:14px;
       border:1px solid rgba(255,255,255,.15);
-      background:#000;
       cursor: zoom-in;
-      transition: transform .15s ease, box-shadow .15s ease;
     }
-    .gallery img:hover{
-      transform: scale(1.02);
-      box-shadow: 0 12px 30px rgba(0,0,0,.45);
-    }
-    figure{margin:0}
-    figcaption{
-      margin-top:8px;
-      color:var(--muted);
-      line-height:1.55;
-      font-size:13px;
-    }
+
+    figcaption{font-size:13px; color:var(--muted); margin-top:8px}
 
     /* Lightbox */
     .lightbox{
@@ -189,279 +171,129 @@
       align-items:center;
       justify-content:center;
       z-index:9999;
-      padding: 22px;
     }
+
     .lightbox.open{display:flex}
+
     .lightbox img{
-      max-width: 94vw;
-      max-height: 92vh;
-      border-radius: 16px;
-      border:1px solid rgba(255,255,255,.18);
-      box-shadow: 0 20px 70px rgba(0,0,0,.55);
+      max-width:94vw;
+      max-height:92vh;
+      border-radius:16px;
       cursor: zoom-out;
-    }
-    .lightbox .hint{
-      position:fixed;
-      top:14px; right:14px;
-      color: rgba(234,240,255,.80);
-      font-size: 12px;
-      border:1px solid rgba(255,255,255,.16);
-      background: rgba(255,255,255,.06);
-      padding:8px 10px;
-      border-radius: 999px;
-      backdrop-filter: blur(10px);
     }
 
     footer{
-      margin-top:18px;
+      margin-top:20px;
       padding-top:18px;
       border-top:1px solid var(--line);
-      color:var(--muted);
       font-size:13px;
-      display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;
-    }
-    code{
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      font-size: 0.95em;
-      background: rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.10);
-      padding: 2px 6px;
-      border-radius: 8px;
-      color: rgba(234,240,255,.92);
+      color:var(--muted);
+      display:flex; justify-content:space-between;
     }
   </style>
 </head>
 
 <body>
-  <header>
-    <div class="topbar">
-      <a class="brand" href="#top">
-        <span class="logo" aria-hidden="true"></span>
-        <span>Flappy Diode</span>
-      </a>
-      <nav aria-label="Navigering">
-        <a class="pill" href="#overview">Översikt</a>
-        <a class="pill" href="#media">Video</a>
-        <a class="pill" href="#gallery">Galleri</a>
-        <a class="pill" href="#build">Hårdvara</a>
-        <a class="pill" href="#code">Kod</a>
-      </nav>
-    </div>
-  </header>
+<header>
+  <div class="topbar">
+    <a class="brand" href="#top">
+      <span class="logo"></span>
+      <span>Flappy Diode</span>
+    </a>
+    <nav>
+      <a class="pill" href="#overview">Översikt</a>
+      <a class="pill" href="#gallery">Galleri</a>
+    </nav>
+  </div>
+</header>
 
-  <main id="top" class="wrap">
-    <section class="card pad" id="overview">
-      <h1>Flappy Diode</h1>
-      <p>Ett fysiskt elektronikspel inspirerat av <i>Flappy Bird</i>. Projektet kombinerar motorstyrning, sensorer och LED-drivning för ett interaktivt spel med poängräkning och “game over”-logik.</p>
+<main id="top" class="wrap">
 
-      <div class="chips">
-        <span class="chip">Arduino</span>
-        <span class="chip">DRV8833</span>
-        <span class="chip">PCA9685</span>
-        <span class="chip">LED</span>
-        <span class="chip">Sensorer</span>
-      </div>
+  <!-- OVERVIEW -->
+  <section class="card pad" id="overview">
+    <div class="heroRow">
 
-      <div class="cta">
-        <a class="btn primary" href="https://github.com/maxwellmollerstten/Flappy-Diode" target="_blank" rel="noreferrer">Repo</a>
-        <a class="btn" href="#gallery">Se galleri</a>
-      </div>
-    </section>
+      <div>
+        <h1>Flappy Diode</h1>
+        <p>
+          Ett fysiskt elektronikspel inspirerat av <i>Flappy Bird</i>.
+          Projektet kombinerar motorstyrning, sensorer och LED-drivning
+          för ett interaktivt spel med poängräkning och “game over”-logik.
+        </p>
 
-    <section class="card pad" id="media" style="margin-top:14px">
-      <h2>Video</h2>
-      <p>Här visas två videos. Den ena är den slutliga produkten, den andra visar hur våra sensorer känner igen hinder och håller koll på poäng.</p>
-      <div class="videoGrid" id="videoGrid"></div>
-    </section>
-
-    <section class="card pad" id="gallery" style="margin-top:14px">
-      <h2>Galleri</h2>
-      <p>Klicka på en bild för att se den större.</p>
-
-      <div class="gallery">
-        <figure>
-          <img src="media/setup.jpg"
-               alt="Uppkoppling av Arduino och drivkretsar"
-               data-full="media/setup.jpg">
-          <figcaption>
-            I denna bilden ser man H-brygga kretsen som Arduino använder för att styra motorerna, PCA-korten som styr LEDs samt LED-display som styrs via shift register.
-          </figcaption>
-        </figure>
-
-        <figure>
-          <img src="media/sensor.jpg" alt="Sensorer som detekterar hinder" data-full="media/sensor.jpg">
-          <figcaption>
-            Bild på sensorer som detekterar hinder.
-          </figcaption>
-        </figure>
-      </div>
-    </section>
-
-    <!-- NY: HÅRDVARA MED "KORT I KORT" -->
-    <section class="card pad" id="build" style="margin-top:14px">
-      <h2>Hårdvara</h2>
-
-      <div class="grid">
-        <!-- Vänster: lista -->
-        <div class="subcard">
-          <h3>Komponenter</h3>
-          <ul>
-            <li>Arduino (Uno / Uno R4)</li>
-            <li>DRV8833 motor driver (H-brygga)</li>
-            <li>PCA9685 PWM-driver (I²C, flera adresser)</li>
-            <li>Joystick</li>
-            <li>Sensorer för positions- och kollisionsdetektion</li>
-          </ul>
+        <div class="chips">
+          <span class="chip">Arduino</span>
+          <span class="chip">DRV8833</span>
+          <span class="chip">PCA9685</span>
+          <span class="chip">LED</span>
+          <span class="chip">Sensorer</span>
         </div>
 
-        <!-- Höger: kort beskrivning -->
-        <aside class="subcard">
-          <h3>Vad det gör</h3>
-          <p><b>Arduino</b> Styr logiken för hela spelet. Kombinerar alla olika kretsar till en.</p>
-          <p><b>DRV8833</b> Driver motorerna med PWM från arduino. Externt 9 Volt batteri kopplas för att ge ström till motorer.</p>
-          <p><b>PCA9685</b> styr alla LEDs via I²C och arduino.</p>
-          
-        </aside>
+        <div class="cta">
+          <a class="btn primary"
+             href="https://github.com/maxwellmollerstten/Flappy-Diode"
+             target="_blank" rel="noreferrer">Repo</a>
+          <a class="btn" href="#gallery">Se galleri</a>
+        </div>
       </div>
-    </section>
 
-    <section class="card pad" id="code" style="margin-top:14px">
-      <h2>Kod & dokumentation</h2>
-      <p>All kod och dokumentation finns i detta repo. Struktur:</p>
-      <ul>
-        <li><code>index.html</code> – den här sidan</li>
-        <li><code>media/</code> – bilder + ev. mp4</li>
-        <li><code>src/</code> – Arduino IDE kod</li>
-      </ul>
-    </section>
+      <div class="previewWrap">
+        <img
+          src="media/flappybird.jpg"
+          alt="Flappy Diode gameplay"
+          data-full="media/flappybird.jpg"
+        />
+        <div class="previewHint">Klicka för att förstora</div>
+      </div>
 
-    <footer>
-      <div>© <span id="year"></span> Flappy Diode</div>
-      <div>GitHub Pages · <code>index.html</code></div>
-    </footer>
-  </main>
+    </div>
+  </section>
 
-  <!-- Lightbox overlay -->
-  <div class="lightbox" id="lightbox" aria-hidden="true">
-    <div class="hint">Klicka eller tryck ESC för att stänga</div>
-    <img id="lightboxImg" alt="">
-  </div>
+  <!-- GALLERY -->
+  <section class="card pad" id="gallery" style="margin-top:14px">
+    <h2>Galleri</h2>
 
-  <script>
-    // ==========================
-    // VIDEO: lägg till videos här
-    // type: "youtube" eller "mp4"
-    // ==========================
-    const videos = [
-      {
-        type: "youtube",
-        title: "Flappy Diode – Demo",
-        note: "Kort demo av spelet.",
-        id: "YRpkC8XQxtg"
-      },
-      {
-        type: "youtube",
-        title: "Sensorer – hinderigenkänning",
-        note: "Visar hur sensorerna detekterar hinder under spelets gång och hur poängräknaren går upp när sensorer känner av att spelare tagit sig genom hinder.",
-        id: "X83KD97dS8s"
-      }
-    ];
+    <div class="gallery">
+      <figure>
+        <img src="media/setup.jpg" data-full="media/setup.jpg" alt="">
+        <figcaption>Elektronikuppsättning med Arduino, motorstyrning och LED-drivare.</figcaption>
+      </figure>
+      <figure>
+        <img src="media/sensor.jpg" data-full="media/sensor.jpg" alt="">
+        <figcaption>Sensorer som detekterar hinder under spelets gång.</figcaption>
+      </figure>
+    </div>
+  </section>
 
-    const videoGrid = document.getElementById("videoGrid");
+  <footer>
+    <div>© <span id="year"></span> Flappy Diode</div>
+    <div>GitHub Pages</div>
+  </footer>
+</main>
 
-    function esc(s){
-      return (s || "").replace(/[&<>"']/g, m => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;" }[m]));
-    }
+<div class="lightbox" id="lightbox">
+  <img id="lightboxImg" alt="">
+</div>
 
-    function renderVideos(){
-      if(!videos.length){
-        videoGrid.innerHTML = `
-          <div class="videoCard">
-            <div class="meta">
-              <b>Inga videos inlagda än</b>
-              <small>Lägg till ett objekt i listan <code>videos</code> i koden.</small>
-            </div>
-          </div>
-        `;
-        return;
-      }
+<script>
+  const lightbox = document.getElementById("lightbox");
+  const lightboxImg = document.getElementById("lightboxImg");
 
-      videoGrid.innerHTML = videos.map(v => {
-        const title = esc(v.title || "Video");
-        const note  = esc(v.note || "");
-        let media = "";
-
-        if(v.type === "youtube"){
-          const id = esc(v.id || "");
-          media = `
-            <div class="videoWrap">
-              <iframe
-                src="https://www.youtube.com/embed/${id}"
-                title="${title}"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowfullscreen>
-              </iframe>
-            </div>
-          `;
-        } else if(v.type === "mp4"){
-          const src = esc(v.src || "");
-          media = `
-            <div class="videoWrap">
-              <video controls preload="metadata">
-                <source src="${src}" type="video/mp4">
-                Din webbläsare stödjer inte video-taggen.
-              </video>
-            </div>
-          `;
-        }
-
-        return `
-          <article class="videoCard">
-            ${media}
-            <div class="meta">
-              <b>${title}</b>
-              <small>${note}</small>
-            </div>
-          </article>
-        `;
-      }).join("");
-    }
-
-    // ==========================
-    // GALLERY: click -> lightbox
-    // ==========================
-    const lightbox = document.getElementById("lightbox");
-    const lightboxImg = document.getElementById("lightboxImg");
-
-    function openLightbox(src, alt){
-      lightboxImg.src = src;
-      lightboxImg.alt = alt || "";
+  document.querySelectorAll("img[data-full]").forEach(img=>{
+    img.onclick = () => {
+      lightboxImg.src = img.dataset.full || img.src;
       lightbox.classList.add("open");
-      lightbox.setAttribute("aria-hidden", "false");
       document.body.style.overflow = "hidden";
-    }
+    };
+  });
 
-    function closeLightbox(){
-      lightbox.classList.remove("open");
-      lightbox.setAttribute("aria-hidden", "true");
-      lightboxImg.src = "";
-      document.body.style.overflow = "";
-    }
+  lightbox.onclick = () => {
+    lightbox.classList.remove("open");
+    lightboxImg.src = "";
+    document.body.style.overflow = "";
+  };
 
-    document.querySelectorAll(".gallery img").forEach(img => {
-      img.addEventListener("click", () => {
-        const full = img.getAttribute("data-full") || img.src;
-        openLightbox(full, img.alt);
-      });
-    });
-
-    lightbox.addEventListener("click", closeLightbox);
-    document.addEventListener("keydown", (e) => {
-      if(e.key === "Escape") closeLightbox();
-    });
-
-    document.getElementById("year").textContent = new Date().getFullYear();
-    renderVideos();
-  </script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
 </body>
 </html>
