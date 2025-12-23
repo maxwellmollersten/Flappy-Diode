@@ -1,0 +1,356 @@
+#include <Wire.h>
+#include <Adafruit_PWMServoDriver.h>
+
+// ============================
+// SENSORER (A0–A2) -> STATE (100 ms)
+// ============================
+const int sensorPins[3] = {A0, A1, A2};
+const int THRESH = 90;
+
+int state = 7;
+unsigned long lastStateUpdate = 0;
+const unsigned long STATE_INTERVAL = 100; // ms
+
+// ============================
+// DRV8833 – två motorer
+// ============================
+const int AIN1 = 11;   // PWM
+const int AIN2 = 10;   // Riktning
+const int BIN1 = 5;    // PWM
+const int BIN2 = 4;    // Riktning
+
+const int MOTOR_A_PWM = 0;
+const int MOTOR_B_PWM = 0;
+
+// ============================
+// PCA9685
+// ============================
+Adafruit_PWMServoDriver pwm41(0x41);
+Adafruit_PWMServoDriver pwm42(0x42);
+
+const uint16_t LED_ON  = 4095;
+const uint16_t LED_OFF = 0;
+
+// ============================
+// JOYSTICK
+// ============================
+const int joyY = A3;
+const int DOWN_THRESH = 998;
+const int UP_THRESH   = 1020;
+const unsigned long MOVE_INTERVAL = 30;
+unsigned long lastMoveTime = 0;
+
+const unsigned long JOY_PRINT_INTERVAL = 100;
+unsigned long lastJoyPrint = 0;
+
+// Restart
+const unsigned long RESTART_HOLD_MS = 3000;
+unsigned long upHoldStart = 0;
+
+// ============================
+// LED RANGE
+// ============================
+const int START_LED = 0;
+const int END_LED   = 27;
+
+// ============================
+// LED-MAPPING (28 LEDs)
+// ============================
+const uint8_t ledAddr[28] = {
+  0x42,0x42,0x42,0x42,0x42,0x42,0x42,0x42,
+  0x42,0x42,0x42,0x42,0x42,0x42,0x42,0x42,
+  0x41,0x41,0x41,0x41,0x41,0x41,0x41,0x41,
+  0x41,0x41,0x41,0x41
+};
+
+const uint8_t ledCh[28] = {
+  15,12,14,13,11,10,9,8,
+  7,6,5,4,3,2,1,0,
+  0,1,2,3,4,5,6,7,
+  8,9,10,11
+};
+
+int currentLed = START_LED;
+
+// ============================
+// LED HELPERS
+// ============================
+void allOff() {
+  for (int ch = 0; ch < 16; ch++) {
+    pwm41.setPWM(ch, 0, LED_OFF);
+    pwm42.setPWM(ch, 0, LED_OFF);
+  }
+}
+
+void setLed(int i) {
+  if (ledAddr[i] == 0x41) pwm41.setPWM(ledCh[i], 0, LED_ON);
+  else                    pwm42.setPWM(ledCh[i], 0, LED_ON);
+}
+
+void showLed(int i) {
+  allOff();
+  setLed(i);
+}
+
+// ============================
+// 74HC595 + 7-seg (score)
+// ============================
+const int SR_DATA  = 2;
+const int SR_CLK   = 3;
+const int SR_LATCH = 6;
+const int DIG_TENS = 7;
+const int DIG_ONES = 8;
+
+static inline byte BIT(int n){ return (byte)(1 << n); }
+
+const byte SEG_A = BIT(7);
+const byte SEG_B = BIT(6);
+const byte SEG_C = BIT(5);
+const byte SEG_D = BIT(4);
+const byte SEG_E = BIT(3);
+const byte SEG_F = BIT(2);
+const byte SEG_G = BIT(1);
+
+const byte DIGIT_FONT[10] = {
+  SEG_A|SEG_B|SEG_C|SEG_D|SEG_E|SEG_F,
+  SEG_B|SEG_C,
+  SEG_A|SEG_B|SEG_D|SEG_E|SEG_G,
+  SEG_A|SEG_B|SEG_C|SEG_D|SEG_G,
+  SEG_F|SEG_G|SEG_B|SEG_C,
+  SEG_A|SEG_F|SEG_G|SEG_C|SEG_D,
+  SEG_A|SEG_F|SEG_G|SEG_E|SEG_C|SEG_D,
+  SEG_A|SEG_B|SEG_C,
+  SEG_A|SEG_B|SEG_C|SEG_D|SEG_E|SEG_F|SEG_G,
+  SEG_A|SEG_B|SEG_C|SEG_D|SEG_F|SEG_G
+};
+
+int score = 0; // vi visar hinder-räknaren här (0–99)
+
+unsigned long lastMux = 0;
+const unsigned long MUX_INTERVAL_US = 1200;
+bool muxWhich = false;
+
+void srWrite(byte data) {
+  digitalWrite(SR_LATCH, LOW);
+  shiftOut(SR_DATA, SR_CLK, LSBFIRST, data);
+  digitalWrite(SR_LATCH, HIGH);
+}
+
+void refreshDisplay() {
+  if (micros() - lastMux < MUX_INTERVAL_US) return;
+  lastMux = micros();
+
+  int tens = (score / 10) % 10;
+  int ones = score % 10;
+
+  digitalWrite(DIG_TENS, LOW);
+  digitalWrite(DIG_ONES, LOW);
+
+  if (!muxWhich) {
+    srWrite(DIGIT_FONT[tens]);
+    digitalWrite(DIG_TENS, HIGH);
+  } else {
+    srWrite(DIGIT_FONT[ones]);
+    digitalWrite(DIG_ONES, HIGH);
+  }
+  muxWhich = !muxWhich;
+}
+
+// ============================
+// HINDER-LOGIK (12 hinder)
+// ============================
+const int NUM_OBSTACLES = 12;
+
+// Hitta-på "safe intervall" per hinder (inklusive gränser).
+// När ett hinder detekteras måste currentLed ligga inom [min,max], annars dör man.
+const int SAFE_MIN[NUM_OBSTACLES] = {  2,  6, 10, 14, 18, 22,  1,  7, 11, 15, 19, 23 };
+const int SAFE_MAX[NUM_OBSTACLES] = {  5,  9, 13, 17, 21, 25,  4, 10, 14, 18, 22, 27 };
+
+int obstacleCount = 0; // 0..11 (nollas efter 12)
+int lapCount = 0;      // hur många varv (valfritt, men bra debug)
+
+bool isDead = false;
+
+// ============================
+// MOTOR + DÖDANIM
+// ============================
+void stopMotors() {
+  analogWrite(AIN1, 0);
+  analogWrite(BIN1, 0);
+}
+
+void runMotorsNormal() {
+  analogWrite(AIN1, MOTOR_A_PWM);
+  analogWrite(BIN1, MOTOR_B_PWM);
+}
+
+void deathAnimation() {
+  stopMotors();
+  for (int i = 0; i < 6; i++) {
+    allOff();
+    delay(120);
+    setLed(currentLed);
+    delay(120);
+  }
+  showLed(currentLed);
+}
+
+void restartGame() {
+  obstacleCount = 0;
+  lapCount = 0;
+  score = 0;
+
+  currentLed = START_LED;
+  showLed(currentLed);
+
+  isDead = false;
+  upHoldStart = 0;
+
+  runMotorsNormal();
+
+  Serial.println("RESTART");
+}
+
+bool inSafeRangeForObstacle(int obstacleIdx, int led) {
+  return (led >= SAFE_MIN[obstacleIdx]) && (led <= SAFE_MAX[obstacleIdx]);
+}
+
+void onObstacleDetected() {
+  int obstacleIdx = obstacleCount % NUM_OBSTACLES;
+
+  Serial.print("HINDER DETEKTERAT: idx=");
+  Serial.print(obstacleIdx);
+  Serial.print(" safe=[");
+  Serial.print(SAFE_MIN[obstacleIdx]);
+  Serial.print(",");
+  Serial.print(SAFE_MAX[obstacleIdx]);
+  Serial.print("] led=");
+  Serial.println(currentLed);
+
+  // DÖD om man inte är inom intervallet för just detta hinder
+  if (!inSafeRangeForObstacle(obstacleIdx, currentLed)) {
+    isDead = true;
+    deathAnimation();
+    return;
+  }
+
+  // Annars: räkna upp hinder
+  obstacleCount++;
+  score = obstacleCount;           // visa på 7-seg
+  if (score > 99) score = 0;
+
+  // När vi nått 12 hinder: vi är tillbaka på start
+  if (obstacleCount >= NUM_OBSTACLES) {
+    lapCount++;
+    obstacleCount = 0;
+    score = 0;
+
+    Serial.print("TILLBAKA PÅ START. lapCount=");
+    Serial.println(lapCount);
+  }
+}
+
+// ============================
+// SETUP
+// ============================
+void setup() {
+  Serial.begin(115200);
+  Wire.begin();
+
+  pwm41.begin();
+  pwm42.begin();
+  pwm41.setPWMFreq(1000);
+  pwm42.setPWMFreq(1000);
+
+  pinMode(joyY, INPUT);
+
+  pinMode(SR_DATA, OUTPUT);
+  pinMode(SR_CLK, OUTPUT);
+  pinMode(SR_LATCH, OUTPUT);
+  pinMode(DIG_TENS, OUTPUT);
+  pinMode(DIG_ONES, OUTPUT);
+
+  pinMode(AIN1, OUTPUT);
+  pinMode(AIN2, OUTPUT);
+  digitalWrite(AIN2, LOW);
+
+  pinMode(BIN1, OUTPUT);
+  pinMode(BIN2, OUTPUT);
+  digitalWrite(BIN2, LOW);
+
+  runMotorsNormal();
+  showLed(currentLed);
+}
+
+// ============================
+// LOOP
+// ============================
+void loop() {
+  refreshDisplay();
+  unsigned long now = millis();
+  int y = analogRead(joyY);
+
+  if (now - lastJoyPrint >= JOY_PRINT_INTERVAL) {
+    Serial.print("Joystick Y = ");
+    Serial.println(y);
+    lastJoyPrint = now;
+  }
+
+  // -------- DEAD MODE --------
+  if (isDead) {
+    static unsigned long lastBlink = 0;
+    static bool blinkOn = true;
+
+    if (now - lastBlink >= 250) {
+      lastBlink = now;
+      if (blinkOn) allOff();
+      else setLed(currentLed);
+      blinkOn = !blinkOn;
+    }
+
+    if (y > UP_THRESH) {
+      if (upHoldStart == 0) upHoldStart = now;
+      if (now - upHoldStart >= RESTART_HOLD_MS) {
+        restartGame();
+      }
+    } else {
+      upHoldStart = 0;
+    }
+    return;
+  }
+
+  // -------- JOYSTICK MOVE --------
+  if (now - lastMoveTime >= MOVE_INTERVAL) {
+    if (y < DOWN_THRESH && currentLed > START_LED) {
+      currentLed--;
+      showLed(currentLed);
+      lastMoveTime = now;
+    } else if (y > UP_THRESH && currentLed < END_LED) {
+      currentLed++;
+      showLed(currentLed);
+      lastMoveTime = now;
+    }
+  }
+
+  // -------- SENSOR -> HINDERDETEKTION --------
+  // Vi triggar "hinder" när vi går från state==7 (allt svart) till state!=7.
+  // Det är samma typ av kantdetektion som du hade, men nu används det för hinder + safe-intervall per hinder.
+  static int prevState = 7;
+
+  if (now - lastStateUpdate >= STATE_INTERVAL) {
+    lastStateUpdate = now;
+
+    int b[3];
+    for (int i = 0; i < 3; i++) {
+      b[i] = (analogRead(sensorPins[i]) <= THRESH);
+    }
+    state = b[0] + b[1]*2 + b[2]*4;
+
+    // Hinder detekteras vid "7 -> inte 7"
+    if (prevState == 7 && state != 7) {
+      onObstacleDetected();
+    }
+
+    prevState = state;
+  }
+}
