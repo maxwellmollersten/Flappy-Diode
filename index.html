@@ -75,11 +75,17 @@
       padding:8px 10px;
       border-radius:999px;
       border:1px solid transparent;
+      transition: color .15s, border-color .15s, background .15s;
     }
     .pill:hover{
       color:var(--text);
       border-color:var(--line);
       background:rgba(255,255,255,.04)
+    }
+    .pill.active{
+      color:var(--a);
+      border-color:rgba(122,162,255,.30);
+      background:rgba(122,162,255,.08);
     }
 
     .pill.back{
@@ -100,22 +106,30 @@
       overflow:hidden;
     }
 
-    .pad{padding:22px}
+    .pad{padding:28px}
 
-    h1{margin:0 0 10px; font-size: clamp(28px, 3.8vw, 44px); line-height:1.12}
-    h2{margin:0 0 10px; font-size:22px}
+    h1{
+      margin:0 0 12px;
+      font-size: clamp(28px, 3.8vw, 44px);
+      line-height:1.12;
+      background: linear-gradient(135deg, var(--text) 40%, var(--a));
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+    h2{margin:0 0 12px; font-size:22px; color:var(--a)}
     p{margin:0 0 12px; color:var(--muted); line-height:1.65}
     ul{margin:0; padding-left:18px; color:var(--muted); line-height:1.7}
 
-    .chips{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px}
+    .chips{display:flex; gap:8px; flex-wrap:wrap; margin-top:16px}
     .chip{
-      font-size:12px; padding:7px 10px; border-radius:999px;
-      border:1px solid var(--line);
-      background: rgba(255,255,255,.04);
-      color: rgba(234,240,255,.92);
+      font-size:12px; padding:6px 10px; border-radius:999px;
+      border:1px solid rgba(122,162,255,.25);
+      background: rgba(122,162,255,.07);
+      color:var(--a);
     }
 
-    .cta{display:flex; gap:10px; flex-wrap:wrap; margin-top:14px}
+    .cta{display:flex; gap:8px; flex-wrap:wrap; margin-top:16px}
     .btn{
       display:inline-flex; align-items:center; justify-content:center; gap:8px;
       padding:10px 12px; border-radius:12px;
@@ -132,7 +146,7 @@
     .heroRow{
       display:grid;
       grid-template-columns: 1.15fr .85fr;
-      gap:14px;
+      gap:16px;
       align-items:start;
     }
     @media (max-width: 860px){ .heroRow{grid-template-columns:1fr} }
@@ -189,7 +203,7 @@
     .grid{
       display:grid;
       grid-template-columns: 1.15fr .85fr;
-      gap:14px;
+      gap:16px;
       align-items:start;
     }
     @media (max-width: 860px){ .grid{grid-template-columns:1fr} }
@@ -198,8 +212,8 @@
     .videoGrid{
       display:grid;
       grid-template-columns: 1fr 1fr;
-      gap:12px;
-      margin-top:12px;
+      gap:16px;
+      margin-top:16px;
     }
     @media (max-width: 860px){ .videoGrid{grid-template-columns:1fr} }
 
@@ -231,8 +245,8 @@
     .gallery{
       display:grid;
       grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-      gap:14px;
-      margin-top:14px;
+      gap:16px;
+      margin-top:16px;
       align-items:start;
     }
     figure{margin:0}
@@ -424,14 +438,14 @@
   </section>
 
   <!-- VIDEO -->
-  <section class="card pad" id="media" style="margin-top:14px">
+  <section class="card pad" id="media" style="margin-top:16px">
     <h2>Video</h2>
     <p>Two videos are shown below: the final demo and a short clip showing how the sensors detect obstacles and how scoring works.</p>
     <div class="videoGrid" id="videoGrid"></div>
   </section>
 
   <!-- GALLERY -->
-  <section class="card pad" id="gallery" style="margin-top:14px">
+  <section class="card pad" id="gallery" style="margin-top:16px">
     <h2>Gallery</h2>
     <p>Click an image to view it larger.</p>
 
@@ -457,7 +471,7 @@
   </section>
 
   <!-- HARDWARE -->
-  <section class="card pad" id="build" style="margin-top:14px">
+  <section class="card pad" id="build" style="margin-top:16px">
     <h2>Hardware</h2>
     <div class="grid">
 
@@ -483,7 +497,7 @@
   </section>
 
   <!-- LINKEDIN -->
-  <section class="card pad" id="linkedin" style="margin-top:14px">
+  <section class="card pad" id="linkedin" style="margin-top:16px">
     <h2>LinkedIn</h2>
     <p>Post from the project. Click the image to enlarge, or open the post.</p>
 
@@ -507,7 +521,7 @@
   </section>
 
   <!-- CODE -->
-  <section class="card pad" id="code" style="margin-top:14px">
+  <section class="card pad" id="code" style="margin-top:16px">
     <h2>Code & documentation</h2>
     <p>All code and documentation are available in the repository. Structure:</p>
     <ul>
@@ -641,6 +655,20 @@
 
   document.getElementById("year").textContent = new Date().getFullYear();
   renderVideos();
+
+  // Active nav highlight via IntersectionObserver
+  const navLinks = document.querySelectorAll('nav .pill:not(.back)');
+  const sections = document.querySelectorAll('section[id]');
+  const navObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        navLinks.forEach(l => l.classList.remove('active'));
+        const link = document.querySelector(`nav a[href="#${entry.target.id}"]`);
+        if(link) link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-10% 0px -60% 0px' });
+  sections.forEach(s => navObserver.observe(s));
 </script>
 </body>
 </html>
